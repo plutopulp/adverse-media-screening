@@ -2,14 +2,14 @@ from fastapi import APIRouter, Depends, Query
 
 from app.dependencies import (
     get_app_logger,
+    get_pipeline,
     get_scraper,
     get_settings,
-    get_pipeline,
 )
 from app.models.articles import Article
 from app.schemas.utils import HealthResponse
-from app.utils.scraping import ArticleScraper
 from app.services.extraction.models import ExtractionResult
+from app.utils.scraping import ArticleScraper
 
 router = APIRouter()
 

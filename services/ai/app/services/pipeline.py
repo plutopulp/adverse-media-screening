@@ -1,6 +1,6 @@
-from app.utils.scraping import ArticleScraper
 from app.services.extraction.llm import LLMExtractor
 from app.services.extraction.models import ExtractionResult
+from app.utils.scraping import ArticleScraper
 
 
 class ArticleExtractionPipeline:
@@ -11,5 +11,3 @@ class ArticleExtractionPipeline:
     def run(self, url: str) -> ExtractionResult:
         article = self.scraper.extract_article(url)
         return self.extractor.extract(article)
-
-

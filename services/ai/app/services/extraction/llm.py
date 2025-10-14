@@ -10,9 +10,9 @@ from langchain_core.language_models import BaseChatModel
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
+from app.config import LLMProviderType
 from app.models.articles import Article
 from app.utils.logger import get_logger
-from app.config import LLMProviderType
 
 from .models import EntitiesOutput, ExtractionMetadata, ExtractionResult
 from .prompt import EXTRACTION_PROMPT
@@ -121,4 +121,3 @@ class LLMExtractor:
         except Exception as e:
             self.logger.error(f"Entity extraction failed: {e}")
             raise RuntimeError(f"Failed to extract entities: {e}")
-

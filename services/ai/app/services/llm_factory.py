@@ -7,7 +7,7 @@ from langchain_anthropic import ChatAnthropic
 from langchain_core.language_models import BaseChatModel
 from langchain_openai import ChatOpenAI
 
-from app.config import LLMProviderType, LLMConfig, Settings
+from app.config import LLMConfig, LLMProviderType, Settings
 
 LLM_MAPPINGS: dict[LLMProviderType, BaseChatModel] = {
     LLMProviderType.OPENAI: ChatOpenAI,

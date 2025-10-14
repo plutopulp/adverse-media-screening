@@ -2,9 +2,9 @@ import httpx
 from fastapi import Depends
 
 from app.config import Settings
-from app.services.pipeline import ArticleExtractionPipeline
-from app.services.llm_factory import create_llm, select_llm_config
 from app.services.extraction.llm import LLMExtractor
+from app.services.llm_factory import create_llm, select_llm_config
+from app.services.pipeline import ArticleExtractionPipeline
 from app.utils.logger import get_logger
 from app.utils.scraping import ArticleScraper
 
