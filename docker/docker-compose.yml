@@ -1,0 +1,40 @@
+services:
+  ai:
+    build:
+      context: ..
+      dockerfile: docker/ai.Dockerfile
+    ports:
+      - 5001:5001
+    volumes:
+      - ../services/ai/app:/app/app # Mount source code for development
+    environment:
+      - AI_ENVIRONMENT=development
+    restart: unless-stopped
+    # Enable interactive mode for development
+    stdin_open: true
+    tty: true
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+  web:
+    build:
+      context: ..
+      dockerfile: docker/web.Dockerfile
+      target: dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=1
+      - AI_SERVICE_URL=http://ai:5001
+    volumes:
+      - ../services/web:/app
+      - /app/node_modules
+    depends_on:
+      - ai
+    stdin_open: true
+    tty: true
