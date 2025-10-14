@@ -8,11 +8,14 @@ services:
     volumes:
       - ../services/ai/app:/app/app # Mount source code for development
       - ../services/ai/downloads:/app/downloads
+    env_file:
+      - ../services/ai/.env
     environment:
       - ENVIRONMENT=development
       - PROJECT_ROOT=/app
       - OUTPUT_DIR=downloads
       - LOG_LEVEL=INFO
+      - DEFAULT_LLM_PROVIDER=openai
     restart: unless-stopped
     # Enable interactive mode for development
     stdin_open: true

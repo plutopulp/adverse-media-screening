@@ -29,8 +29,20 @@ help:
 build:
 	$(DC) build
 
+build-ai:
+	$(DC) build ai
+
+build-web:
+	$(DC) build web
+
 rebuild:
 	$(DC) build --no-cache
+
+rebuild-ai:
+	$(DC) build --no-cache ai
+
+rebuild-web:
+	$(DC) build --no-cache web
 
 start:
 	$(DC) up -d
