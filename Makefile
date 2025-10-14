@@ -35,6 +35,9 @@ rebuild:
 start:
 	$(DC) up -d
 
+start-ai:
+	$(DC) up -d ai
+
 stop:
 	$(DC) down
 

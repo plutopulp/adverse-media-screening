@@ -1,10 +1,10 @@
 FROM python:3.13-slim
 
-# Set up non-root user for security
+# Set up non-root user for security (use UID/GID 1000 for bind-mount friendliness)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends curl && \
     rm -rf /var/lib/apt/lists/* && \
-    groupadd -r uvicorn-user && useradd -r -g uvicorn-user uvicorn-user
+    groupadd -g 1000 app && useradd -u 1000 -g 1000 -r uvicorn-user
 
 WORKDIR /app
 
@@ -19,7 +19,7 @@ RUN poetry config virtualenvs.create false
 
 RUN poetry install --no-interaction --no-ansi --no-root
 
-RUN mkdir -p /app/app
+RUN mkdir -p /app/app /app/downloads && chown -R 1000:1000 /app
 # Copy application code
 COPY services/ai/app /app/app
     

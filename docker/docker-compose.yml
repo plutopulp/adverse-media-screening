@@ -7,8 +7,12 @@ services:
       - 5001:5001
     volumes:
       - ../services/ai/app:/app/app # Mount source code for development
+      - ../services/ai/downloads:/app/downloads
     environment:
-      - AI_ENVIRONMENT=development
+      - ENVIRONMENT=development
+      - PROJECT_ROOT=/app
+      - OUTPUT_DIR=downloads
+      - LOG_LEVEL=INFO
     restart: unless-stopped
     # Enable interactive mode for development
     stdin_open: true
