@@ -20,7 +20,7 @@ class ScreeningResult(BaseModel):
     and matching results. Future versions will include sentiment analysis.
 
     Attributes:
-        query_person: The person being screened (with normalized fields)
+        query_person: The person being screened (with normalised fields)
         article: Full article content (single source of truth, not duplicated)
         entities: All extracted entities (needed for allegations/sentiment later)
         matching: Match decisions, signals, and evidence

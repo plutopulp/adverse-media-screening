@@ -112,11 +112,7 @@ class ExtractionResult(BaseModel):
 
     Attributes:
         entities: List of extracted person entities
-        metadata: Extraction metadata (includes url, title, article_length_chars)
-
-    Note:
-        Article is not included to avoid duplication in ScreeningResult.
-        Article metadata (url, title, length) is available in metadata field.
+        metadata: Extraction metadata
     """
 
     entities: list[Entity]

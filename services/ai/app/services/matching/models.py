@@ -18,7 +18,7 @@ class MatchDecision(str, Enum):
     """
     Match decision with conservative bias (prefer manual review).
 
-    Prioritizes recall over precision - better to flag uncertain matches
+    Prioritises recall over precision - better to flag uncertain matches
     for manual review than to miss a true match.
     """
 
@@ -33,11 +33,6 @@ class MatchDecision(str, Enum):
         """
         Convert string to MatchDecision enum, with fallback to UNCERTAIN.
 
-        Args:
-            value: String value from LLM output
-
-        Returns:
-            MatchDecision enum, defaults to UNCERTAIN for invalid/None values
         """
         if value is None:
             return cls.UNCERTAIN
@@ -45,6 +40,7 @@ class MatchDecision(str, Enum):
         normalised = value.lower().replace(" ", "_")
         try:
             return cls(normalised)
+        # Consider raising an error here to better understand what is being passed in
         except ValueError:
             return cls.UNCERTAIN
 
@@ -66,20 +62,6 @@ class SignalValue(str, Enum):
     def from_string(cls, value: str | None) -> "SignalValue":
         """
         Convert string to SignalValue enum, with fallback to UNKNOWN.
-
-        Args:
-            value: String value from LLM output (e.g., "match", "no_match", "unknown")
-
-        Returns:
-            SignalValue enum, defaults to UNKNOWN for invalid/None values
-
-        Example:
-            >>> SignalValue.from_string("match")
-            SignalValue.MATCH
-            >>> SignalValue.from_string(None)
-            SignalValue.UNKNOWN
-            >>> SignalValue.from_string("invalid")
-            SignalValue.UNKNOWN
         """
         if value is None:
             return cls.UNKNOWN
@@ -87,6 +69,7 @@ class SignalValue(str, Enum):
         normalised = value.lower().replace(" ", "_")
         try:
             return cls(normalised)
+        # Consider raising an error here to better understand what is being passed in
         except ValueError:
             return cls.UNKNOWN
 
@@ -106,31 +89,24 @@ class QueryPerson(BaseModel):
     name: str  # Can be full name, partial, with titles, etc.
     date_of_birth: str | None = None  # Optional: "1980-01-15", "15 Jan 1980", "1980"
 
-    # Derived/normalized fields (populated by normalize())
-    normalized_name: str | None = None
+    # Derived/normalised fields (populated by normalise())
+    normalised_name: str | None = None
     possible_nicknames: list[str] = []
     birth_year: int | None = None
 
-    def normalize(self) -> None:
+    def normalise(self) -> None:
         """
-        Normalize query person: normalize name, generate nicknames, parse DOB.
+        Normalise query person: normalise name, generate nicknames, parse DOB.
 
         Modifies self in-place. Call this before matching.
 
-        Example:
-            >>> query = QueryPerson(name="  Robert Smith  ", date_of_birth="1980")
-            >>> query.normalize()
-            >>> query.normalized_name
-            "Robert Smith"
-            >>> "bob" in query.possible_nicknames
-            True
         """
 
-        # Normalize name (analyst input has no titles)
-        self.normalized_name = normalise_name(self.name)
+        # Normalise name (analyst input has no titles)
+        self.normalised_name = normalise_name(self.name)
 
         # Generate possible nicknames
-        variations = get_name_variations(self.normalized_name)
+        variations = get_name_variations(self.normalised_name)
         self.possible_nicknames = variations.get("all_variations", [])
 
         # Extract birth year from DOB
@@ -144,7 +120,7 @@ class QueryPerson(BaseModel):
         """
         return {
             "query_name": self.name,
-            "query_normalized_name": self.normalized_name or self.name,
+            "query_normalised_name": self.normalised_name or self.name,
             "query_nicknames": (
                 ", ".join(self.possible_nicknames)
                 if self.possible_nicknames

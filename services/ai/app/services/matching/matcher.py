@@ -109,8 +109,8 @@ class PersonMatcher:
             >>> if result.has_definite_match:
             ...     print(f"Found: {result.primary_match.entity_name}")
         """
-        # Normalize query person
-        query_person.normalize()
+        # Normalise query person
+        query_person.normalise()
 
         # Track entities analyzed
         entities_analyzed: list[str] = [
@@ -144,7 +144,7 @@ class PersonMatcher:
         has_definite: bool = any(
             m.decision == MatchDecision.DEFINITE_MATCH for m in matches
         )
-        requires_review: bool = any(
+        requires_review: bool = (not has_definite) and any(
             m.decision in [MatchDecision.UNCERTAIN, MatchDecision.POSSIBLE_MATCH]
             for m in matches
         )
@@ -180,7 +180,7 @@ class PersonMatcher:
         Match query against single entity using LLM.
 
         Args:
-            query: Normalized query person
+            query: Normalised query person
             entity: Entity from article
 
         Returns:

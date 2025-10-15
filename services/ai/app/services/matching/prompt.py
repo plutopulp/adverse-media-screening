@@ -1,5 +1,5 @@
 # IMPORTANT: Update this version when you make changes to the prompt
-PROMPT_VERSION = "0.1.2"
+PROMPT_VERSION = "0.1.3"
 
 MATCHING_PROMPT = """You are a person matching specialist for adverse media screening in a regulated context.
 
@@ -9,7 +9,7 @@ MATCHING_PROMPT = """You are a person matching specialist for adverse media scre
 
 **QUERY PERSON** (from analyst - name + optional DOB only):
 Name: {query_name}
-Normalized Name: {query_normalized_name}
+Normalised Name: {query_normalised_name}
 Possible Nicknames: {query_nicknames}
 Date of Birth: {query_dob}
 Birth Year: {query_birth_year}
@@ -81,7 +81,7 @@ You will evaluate TWO categories of signals: NAME and DEMOGRAPHICS.
   Confidence: 0.0-0.19
 
 **CRITICAL RULES**:
-1. Query person ONLY has name + optional DOB (no role, location, employment data)
+1. Query person ONLY has name + optional DOB
 2. If name matches exactly but NO DOB available → "probable_match" (not definite_match)
 3. If name matches but birth years differ by 3-5 years → "uncertain" (NOT no_match)
 4. If only partial name match (first or last only) → "possible_match" (NOT no_match)
@@ -110,6 +110,4 @@ You will evaluate TWO categories of signals: NAME and DEMOGRAPHICS.
 - confidence must be between 0 and 1
 - reasoning must provide step-by-step explanation focusing on NAME + DEMOGRAPHICS only
 - evidence lists should cite specific facts (name match, DOB match, birth year discrepancy, etc.)
-- DO NOT mention role, location, or employment in reasoning - we don't have this data
-
 """
