@@ -1,3 +1,6 @@
+# IMPORTANT: Update this version when you make changes to the prompt
+PROMPT_VERSION = "0.1.0"
+
 EXTRACTION_PROMPT = """You are an information extraction agent for regulatory compliance and adverse media screening.
 
 Extract ALL person entities mentioned in the article. For EACH entity, capture:

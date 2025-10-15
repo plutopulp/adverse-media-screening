@@ -112,10 +112,12 @@ class ExtractionResult(BaseModel):
 
     Attributes:
         entities: List of extracted person entities
-        article: The source article
-        metadata: Extraction metadata for performance tracking
+        metadata: Extraction metadata (includes url, title, article_length_chars)
+
+    Note:
+        Article is not included to avoid duplication in ScreeningResult.
+        Article metadata (url, title, length) is available in metadata field.
     """
 
     entities: list[Entity]
-    article: Article
-    metadata: ExtractionMetadata = Field(default_factory=ExtractionMetadata)
+    metadata: ExtractionMetadata

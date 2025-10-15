@@ -1004,6 +1004,18 @@ files = [
 ]
 
 [[package]]
+name = "nicknames"
+version = "1.0.0"
+description = "Hand-curated dataset of English names and nicknames."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "nicknames-1.0.0-py3-none-any.whl", hash = "sha256:4b7a10e7f0c49c93b6bde4c78dd0c6d7d609d79c019c9bfa961c290183d4fe68"},
+    {file = "nicknames-1.0.0.tar.gz", hash = "sha256:28a53d1f12c356a004deee0beec00ade131aa9c563b4fd9b9a4a3d7e3a21a837"},
+]
+
+[[package]]
 name = "openai"
 version = "2.3.0"
 description = "The official Python library for the openai API"
@@ -2186,4 +2198,4 @@ cffi = ["cffi (>=1.17,<2.0) ; platform_python_implementation != \"PyPy\" and pyt
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<4.0"
-content-hash = "4b29a42a2a6c95327f0a7390164eb95e32fe87819dbc07db6e088b9ef1bd115a"
+content-hash = "2f23802f39282a9386cb6e641a9312ed970806f8e26d0a5b577837be4269069c"

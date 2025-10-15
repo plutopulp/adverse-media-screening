@@ -15,7 +15,7 @@ from app.models.articles import Article
 from app.utils.logger import get_logger
 
 from .models import EntitiesOutput, ExtractionMetadata, ExtractionResult
-from .prompt import EXTRACTION_PROMPT
+from .prompt import EXTRACTION_PROMPT, PROMPT_VERSION
 
 
 class LLMExtractor:
@@ -59,7 +59,8 @@ class LLMExtractor:
 
     def extract(self, article: Article) -> ExtractionResult:
         """
-        Extract person entities from article using LLM with comprehensive metadata tracking.
+        Extract person entities from article using LLM with comprehensive metadata
+        tracking.
 
         Args:
             article: Article to process
@@ -100,21 +101,26 @@ class LLMExtractor:
 
             # Build comprehensive metadata
             metadata = ExtractionMetadata(
-                url=article.url,
-                title=article.title,
                 processed_at=datetime.now(timezone.utc).isoformat(),
                 processing_time_seconds=round(processing_time, 2),
-                article_length_chars=len(article.content),
                 llm_provider=str(self.provider.value),
                 llm_model=self.model_name,
+                analyser_version="0.1.0",
+                prompt_version=PROMPT_VERSION,
+                url=article.url,
+                title=article.title,
+                article_length_chars=len(article.content),
             )
 
             extraction_result = ExtractionResult(
-                entities=result.entities, article=article, metadata=metadata
+                entities=result.entities, metadata=metadata
             )
 
             self.logger.info(
-                f"Successfully extracted {len(result.entities)} entities in {processing_time:.2f}s"
+                (
+                    f"Successfully extracted {len(result.entities)} entities in "
+                    f"{processing_time:.2f}s"
+                )
             )
             return extraction_result
 
