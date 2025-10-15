@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field
 
-from app.models.articles import Article
 from app.models.llm_metadata import LLMMetadata
 
 

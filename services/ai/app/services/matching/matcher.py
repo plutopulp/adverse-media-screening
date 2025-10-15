@@ -82,13 +82,6 @@ class PersonMatcher:
         # Create chain
         self.chain = self.prompt | self.llm | self.output_parser
 
-        self.logger.info(
-            (
-                f"Initialized PersonMatcher provider={self.provider} "
-                f"model={self.model_name}"
-            )
-        )
-
     def match(
         self, query_person: QueryPerson, extraction_result: ExtractionResult
     ) -> MatchingResult:
@@ -112,8 +105,8 @@ class PersonMatcher:
         # Normalise query person
         query_person.normalise()
 
-        # Track entities analyzed
-        entities_analyzed: list[str] = [
+        # Track entities analysed
+        entities_analysed: list[str] = [
             entity.id for entity in extraction_result.entities
         ]
 
@@ -165,7 +158,7 @@ class PersonMatcher:
 
         return MatchingResult(
             query_person=query_person,
-            entities_analyzed=entities_analyzed,
+            entities_analysed=entities_analysed,
             matches=matches,
             has_definite_match=has_definite,
             has_any_match=len(matches) > 0,

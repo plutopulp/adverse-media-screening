@@ -8,6 +8,7 @@ and matching data without duplication.
 from pydantic import BaseModel
 
 from app.models.articles import Article
+from app.services.credibility.models import CredibilityResult
 from app.services.extraction.models import Entity
 from app.services.matching.models import MatchingResult, QueryPerson
 
@@ -29,12 +30,13 @@ class ScreeningResult(BaseModel):
         1. Scrape article → article field
         2. Extract entities → entities field
         3. Match person → matching field
-        4. (Future) Analyze sentiment → sentiment field
+        4. (Future) Analyse sentiment → sentiment field
 
     """
 
-    query_person: QueryPerson
     article: Article  # Full article at top level (url, title, content)
+    article_credibility: CredibilityResult | None = None
+    query_person: QueryPerson
     entities: list[Entity]  # All extracted entities with allegations
     matching: MatchingResult  # Match decisions and signals
 

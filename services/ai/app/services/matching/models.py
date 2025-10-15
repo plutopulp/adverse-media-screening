@@ -277,7 +277,7 @@ class MatchingResult(BaseModel):
 
     query_person: QueryPerson
     # Entity tracking
-    entities_analyzed: list[str] = []  # Entity IDs checked
+    entities_analysed: list[str] = []  # Entity IDs checked
 
     # Match results
     matches: list[PersonMatch]

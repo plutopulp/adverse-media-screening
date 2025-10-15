@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, Query
 
 from app.dependencies import (
     get_app_logger,
+    get_credibility_analyser,
     get_pipeline,
     get_scraper,
     get_screening_pipeline,
@@ -9,6 +10,7 @@ from app.dependencies import (
 )
 from app.models.articles import Article
 from app.schemas.utils import HealthResponse
+from app.services.credibility.models import CredibilityResult
 from app.services.extraction.models import ExtractionResult
 from app.services.matching.models import QueryPerson
 from app.services.screening.models import ScreeningResult
@@ -69,9 +71,20 @@ def screen_article(
     3. Person matching
 
     Returns comprehensive screening results with article, entities, and match data.
-
-    Example:
-        /utils/screen?url=https://example.com/article&name=Rachel Reeves&date_of_birth=1979-05-13
     """
     query_person = QueryPerson(name=name, date_of_birth=date_of_birth)
     return pipeline.screen(url, query_person)
+
+
+@router.get("/utils/credibility", response_model=CredibilityResult)
+def assess_credibility(
+    url: str = Query(..., description="Article URL"),
+    scraper: ArticleScraper = Depends(get_scraper),
+    analyser=Depends(get_credibility_analyser),
+):
+    """Assess article credibility in isolation."""
+    article = scraper.extract_article(url)
+    try:
+        return analyser.assess(article)
+    finally:
+        scraper.close()

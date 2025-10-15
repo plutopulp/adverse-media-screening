@@ -6,6 +6,8 @@ Orchestrates the complete workflow: scrape → extract → match → (future: se
 
 from app.config import Settings
 from app.models.articles import Article
+from app.services.credibility.analyser import CredibilityAnalyser
+from app.services.credibility.models import CredibilityResult
 from app.services.extraction.llm import LLMExtractor
 from app.services.extraction.models import ExtractionResult
 from app.services.matching.matcher import PersonMatcher
@@ -28,6 +30,7 @@ class ScreeningPipeline:
         extractor: LLMExtractor,
         matcher: PersonMatcher,
         settings: Settings,
+        analyser: CredibilityAnalyser | None = None,
     ):
         """
         Initialize screening pipeline with required services.
@@ -42,6 +45,7 @@ class ScreeningPipeline:
         self.extractor = extractor
         self.matcher = matcher
         self.settings = settings
+        self.analyser = analyser
 
     def screen(self, url: str, query_person: QueryPerson) -> ScreeningResult:
         """
@@ -58,7 +62,7 @@ class ScreeningPipeline:
             1. Scrape article content
             2. Extract person entities with LLM
             3. Match query person against entities
-            4. (Future) Analyze sentiment of matched entities
+            4. (Future) Analyse sentiment of matched entities
 
         Example:
             >>> pipeline = ScreeningPipeline(...)
@@ -70,6 +74,11 @@ class ScreeningPipeline:
         # Step 1: Scrape article
         article: Article = self.scraper.extract_article(url)
 
+        # Optional step: Credibility assessment first
+        credibility: CredibilityResult | None = None
+        if self.analyser is not None:
+            credibility = self.analyser.assess(article)
+
         # Step 2: Extract entities
         extraction_result: ExtractionResult = self.extractor.extract(article)
 
@@ -78,10 +87,11 @@ class ScreeningPipeline:
             query_person, extraction_result
         )
 
-        # Build comprehensive result (article at top level, no duplication)
+        # Build comprehensive result
         return ScreeningResult(
-            query_person=query_person,
             article=article,
+            article_credibility=credibility,
+            query_person=query_person,
             entities=extraction_result.entities,
             matching=matching_result,
         )
