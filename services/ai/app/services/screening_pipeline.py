@@ -8,7 +8,7 @@ from app.config import Settings
 from app.models.articles import Article
 from app.services.credibility.analyser import CredibilityAnalyser
 from app.services.credibility.models import CredibilityResult
-from app.services.extraction.llm import LLMExtractor
+from app.services.extraction.llm import EntityExtractor
 from app.services.extraction.models import ExtractionResult
 from app.services.matching.matcher import PersonMatcher
 from app.services.matching.models import MatchingResult, QueryPerson
@@ -27,7 +27,7 @@ class ScreeningPipeline:
     def __init__(
         self,
         scraper: ArticleScraper,
-        extractor: LLMExtractor,
+        extractor: EntityExtractor,
         matcher: PersonMatcher,
         settings: Settings,
         analyser: CredibilityAnalyser | None = None,

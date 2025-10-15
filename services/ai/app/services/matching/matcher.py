@@ -31,13 +31,13 @@ from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
 from app.config import LLMProviderType
+from app.models.llm_metadata import AnalyserMetadata
 from app.services.extraction.models import Entity, ExtractionResult
 from app.utils.logger import get_logger
 
 from .models import (
     MatchAnalysis,
     MatchDecision,
-    MatchingMetadata,
     MatchingResult,
     PersonMatch,
     QueryPerson,
@@ -147,7 +147,7 @@ class PersonMatcher:
 
         # Build metadata
         processing_time: float = time.time() - start_time
-        metadata: MatchingMetadata = MatchingMetadata(
+        metadata: AnalyserMetadata = AnalyserMetadata(
             processed_at=datetime.now().isoformat(),
             processing_time_seconds=round(processing_time, 2),
             llm_provider=str(self.provider.value),

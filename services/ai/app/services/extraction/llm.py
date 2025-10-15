@@ -12,13 +12,14 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from app.config import LLMProviderType
 from app.models.articles import Article
+from app.models.llm_metadata import AnalyserMetadata
 from app.utils.logger import get_logger
 
-from .models import EntitiesOutput, ExtractionMetadata, ExtractionResult
+from .models import EntitiesOutput, ExtractionResult
 from .prompt import EXTRACTION_PROMPT, PROMPT_VERSION
 
 
-class LLMExtractor:
+class EntityExtractor:
     """
     LLM-based entity extractor with Pydantic validation.
 
@@ -46,7 +47,7 @@ class LLMExtractor:
         logger=get_logger(service="extraction"),
     ):
         """
-        Initialize extractor with an LLM.
+        Initialise extractor with an LLM.
 
         """
         self.llm = llm
@@ -54,76 +55,73 @@ class LLMExtractor:
         self.provider = provider
         self.model_name = model_name
         self.logger.info(
-            f"Initialized LLMExtractor provider={self.provider} model={self.model_name}"
+            "Initialised EntityExtractor provider={} model={}",
+            self.provider,
+            self.model_name,
         )
+
+        # Setup parser and prompt template
+        self.parser = PydanticOutputParser(pydantic_object=EntitiesOutput)
+        self.prompt_template = ChatPromptTemplate.from_template(EXTRACTION_PROMPT)
+        self.chain = self.prompt_template | self.llm | self.parser
+
+    def preprocess(self, article: Article) -> dict:
+        """Prepare input for the model."""
+        return {
+            "article_text": article.content,
+            "format_instructions": self.parser.get_format_instructions(),
+        }
+
+    def compose_prompt(self, preprocessed_input: dict) -> dict:
+        """Compose prompt data (already done in preprocess for this analyser)."""
+        return preprocessed_input
+
+    def invoke_model(self, prompt_data: dict) -> EntitiesOutput:
+        """Invoke LLM chain and return parsed output."""
+        return self.chain.invoke(prompt_data)
+
+    def postprocess(
+        self, output: EntitiesOutput, article: Article, processing_time: float
+    ) -> ExtractionResult:
+        """Assign IDs, build metadata, construct result."""
+        # Assign unique IDs to each entity
+        for entity in output.entities:
+            entity.id = str(uuid.uuid4())
+
+        metadata = AnalyserMetadata(
+            processed_at=datetime.now(timezone.utc).isoformat(),
+            processing_time_seconds=round(processing_time, 2),
+            llm_provider=str(self.provider.value),
+            llm_model=self.model_name,
+            analyser_version="0.2.0",
+            prompt_version=PROMPT_VERSION,
+        )
+
+        return ExtractionResult(entities=output.entities, metadata=metadata)
 
     def extract(self, article: Article) -> ExtractionResult:
         """
         Extract person entities from article using LLM with comprehensive metadata
         tracking.
-
-        Args:
-            article: Article to process
-
-        Returns:
-            ExtractionResult with validated entities and performance metadata
-
-        Raises:
-            RuntimeError: If LLM extraction or validation fails
         """
-        self.logger.info(f"Extracting entities from article: {article.title}")
+        self.logger.info("Extracting entities from article: {}", article.title)
         start_time = time.time()
 
-        # Setup Pydantic parser for structured output
-        parser = PydanticOutputParser(pydantic_object=EntitiesOutput)
-
-        # Create prompt template
-        prompt = ChatPromptTemplate.from_template(EXTRACTION_PROMPT)
-
-        # Build chain with LCEL
-        chain = prompt | self.llm | parser
-
         try:
-            # Invoke chain with article text and format instructions
-            result = chain.invoke(
-                {
-                    "article_text": article.content,
-                    "format_instructions": parser.get_format_instructions(),
-                }
-            )
-
-            # Assign unique IDs to each entity
-            for entity in result.entities:
-                entity.id = str(uuid.uuid4())
-
-            # Calculate processing time
+            # Standard 4-phase lifecycle
+            preprocessed = self.preprocess(article)
+            prompt_data = self.compose_prompt(preprocessed)
+            output = self.invoke_model(prompt_data)
             processing_time = time.time() - start_time
-
-            # Build comprehensive metadata
-            metadata = ExtractionMetadata(
-                processed_at=datetime.now(timezone.utc).isoformat(),
-                processing_time_seconds=round(processing_time, 2),
-                llm_provider=str(self.provider.value),
-                llm_model=self.model_name,
-                analyser_version="0.1.0",
-                prompt_version=PROMPT_VERSION,
-                url=article.url,
-                title=article.title,
-                article_length_chars=len(article.content),
-            )
-
-            extraction_result = ExtractionResult(
-                entities=result.entities, metadata=metadata
-            )
+            extraction_result = self.postprocess(output, article, processing_time)
 
             self.logger.info(
-                (
-                    f"Successfully extracted {len(result.entities)} entities in "
-                    f"{processing_time:.2f}s"
-                )
+                "Successfully extracted {} entities in {:.2f}s",
+                len(extraction_result.entities),
+                processing_time,
             )
             return extraction_result
 
         except Exception as e:
-            self.logger.error(f"Entity extraction failed: {e}")
+            self.logger.exception("Entity extraction failed: {}", e)
             raise RuntimeError(f"Failed to extract entities: {e}")

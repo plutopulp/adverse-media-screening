@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from app.models.llm_metadata import LLMMetadata
+from app.models.llm_metadata import AnalyserMetadata
 
 
 class EntityRelationship(BaseModel):
@@ -30,22 +30,7 @@ class EmploymentRecord(BaseModel):
     evidence_quote: str  # Sentence stating this employment
 
 
-class Allegation(BaseModel):
-    """
-    Structured allegation or criminal charge.
-
-    Captures allegations with full context including financial amounts,
-    timeframes, and jurisdiction for adverse media screening.
-    """
-
-    category: str  # corruption, fraud, money_laundering, sanctions, violence, etc.
-    description: str  # What they allegedly did
-    status: str  # alleged, charged, under_investigation, convicted, dismissed, denied
-    amount: str | None = None  # Financial amount specific to this allegation
-    timeframe: str | None = None  # When this allegation occurred
-    jurisdiction: str | None = None  # Where: "Jersey", "Spain", etc.
-    evidence_quote: str  # Exact sentence from article
-    subject_response: str | None = None  # Rare: response to this specific allegation
+# Allegation extraction has been moved to the sentiment step.
 
 
 class Entity(BaseModel):
@@ -72,9 +57,10 @@ class Entity(BaseModel):
     employments: list[EmploymentRecord] = []
     locations: list[str] = []  # General location associations
 
-    # Adverse media data
-    allegations: list[Allegation] = []
-    overall_response: str | None = None  # General response to allegations
+    # Additional identity details (explicit only)
+    nationalities: list[str] = []  # e.g., British, French
+    place_of_birth: str | None = None
+    identifiers: list[str] = []  # e.g., passport numbers if explicitly stated
 
     # Relationships
     relationships: list[EntityRelationship] = []
@@ -83,19 +69,6 @@ class Entity(BaseModel):
     mention_sentences: list[str] = []
     mention_count: int = 0
     extraction_confidence: float = Field(ge=0, le=1, default=1.0)
-
-    # LLM will populate both structured employments AND these simple lists
-    roles: list[str] = []
-    organization: list[str] = []
-
-
-class ExtractionMetadata(LLMMetadata):
-    """Extraction-specific metadata."""
-
-    # Article context
-    url: str
-    title: str
-    article_length_chars: int
 
 
 # Pydantic model for LLM output validation
@@ -115,4 +88,4 @@ class ExtractionResult(BaseModel):
     """
 
     entities: list[Entity]
-    metadata: ExtractionMetadata
+    metadata: AnalyserMetadata

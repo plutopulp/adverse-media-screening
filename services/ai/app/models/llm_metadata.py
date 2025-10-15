@@ -1,8 +1,8 @@
 from pydantic import BaseModel
 
 
-class LLMMetadata(BaseModel):
-    """Base metadata for all LLM-based stages."""
+class AnalyserMetadata(BaseModel):
+    """Unified metadata for all analysis stages (extraction, matching, credibility)."""
 
     # Timing
     processed_at: str  # ISO timestamp

@@ -1,10 +1,10 @@
-from app.services.extraction.llm import LLMExtractor
+from app.services.extraction.llm import EntityExtractor
 from app.services.extraction.models import ExtractionResult
 from app.utils.scraping import ArticleScraper
 
 
 class ArticleExtractionPipeline:
-    def __init__(self, scraper: ArticleScraper, extractor: LLMExtractor) -> None:
+    def __init__(self, scraper: ArticleScraper, extractor: EntityExtractor) -> None:
         self.scraper = scraper
         self.extractor = extractor
 

@@ -9,7 +9,7 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
-from app.models.llm_metadata import LLMMetadata
+from app.models.llm_metadata import AnalyserMetadata
 
 from .utils import extract_year_from_date_string, get_name_variations, normalise_name
 
@@ -286,7 +286,7 @@ class MatchingResult(BaseModel):
     requires_manual_review: bool
     primary_match: PersonMatch | None = None
     summary: str
-    metadata: "MatchingMetadata"
+    metadata: AnalyserMetadata
 
     @staticmethod
     def generate_summary(matches: list[PersonMatch], query_name: str) -> str:
@@ -328,9 +328,3 @@ class MatchingResult(BaseModel):
             f"Top match: '{top_match.entity_name}' ({top_match.decision.value}, {top_match.confidence:.0%}). "
             f"Manual review recommended for disambiguation."
         )
-
-
-class MatchingMetadata(LLMMetadata):
-    """Metadata for matching results."""
-
-    pass

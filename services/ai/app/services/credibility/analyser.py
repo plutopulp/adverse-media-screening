@@ -13,9 +13,10 @@ from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 
 from app.models.articles import Article
+from app.models.llm_metadata import AnalyserMetadata
 from app.utils.logger import get_logger
 
-from .models import CredibilityAssessment, CredibilityMetadata, CredibilityResult
+from .models import CredibilityAssessment, CredibilityResult
 from .prompt import CREDIBILITY_PROMPT, PROMPT_VERSION
 
 
@@ -95,7 +96,8 @@ class CredibilityAnalyser:
 
             # Build metadata
             processing_time = time.time() - start_time
-            metadata = CredibilityMetadata(
+
+            metadata = AnalyserMetadata(
                 processed_at=datetime.now().isoformat(),
                 processing_time_seconds=round(processing_time, 2),
                 llm_provider=str(self.provider.value),

@@ -1,5 +1,5 @@
 # IMPORTANT: Update this version when you make changes to the prompt
-PROMPT_VERSION = "0.1.0"
+PROMPT_VERSION = "0.2.0"
 
 EXTRACTION_PROMPT = """You are an information extraction agent for regulatory compliance and adverse media screening.
 
@@ -18,20 +18,10 @@ Extract ALL person entities mentioned in the article. For EACH entity, capture:
   * timeframe: "current", "former", "2018-2020", etc.
   * evidence_quote: exact sentence stating this employment
 
-**Allegations & Charges (CRITICAL for adverse media):**
-For any entity with allegations, extract structured allegations:
-- allegations: List of allegations, each containing:
-  * category: corruption, fraud, money_laundering, sanctions, violence, etc.
-  * description: what specifically they allegedly did
-  * status: alleged, charged, under_investigation, convicted, dismissed, denied
-  * amount: financial amount if mentioned ("$13bn", "millions")
-  * timeframe: when it occurred ("in the 1990s", "March 2022")
-  * jurisdiction: where ("Jersey", "Spain", "UK")
-  * evidence_quote: exact sentence from article
-  * subject_response: response to THIS specific allegation (usually null)
-
-**Overall Response:**
-- overall_response: How did the entity respond to allegations overall? ("denied all allegations", "no comment", etc.)
+**Additional Identity (explicit only):**
+- nationalities/citizenships (explicit only)
+- place_of_birth (explicit only)
+- identifiers (explicit only, if stated, e.g., case numbers)
 
 **Relationships:**
 - relationships: List of relationships to other entities:
@@ -80,20 +70,15 @@ mention_count: 3
 - Generic references ("officials say") should NOT be attributed unless specific person is clear
 - Ambiguous pronouns (could refer to multiple entities) should be excluded
 
-**Backward Compatibility (still needed):**
-- roles: simple list of all roles (also in employments)
-- organization: simple list of all organizations (also in employments)
+
 
 **CRITICAL RULES**:
 1. Do NOT invent information not in the article
 2. Each name must literally appear in text
-3. For allegations: extract category, status, and evidence_quote - these are REQUIRED
-4. Link roles to organizations in employments (solves "which role at which org" ambiguity)
-5. Calculate mention_count by counting sentences (including coreferences)
-6. Set extraction_confidence: 1.0 if very clear, lower if uncertain
-7. If no allegations exist for an entity, allegations list is empty (not null)
-8. Populate BOTH employments (structured) AND roles/organization (simple lists)
-9. RESOLVE COREFERENCES: Include pronoun and role references in mention_sentences
+3. Link roles to organizations in employments (solves "which role at which org" ambiguity)
+4. Calculate mention_count by counting sentences (including coreferences)
+5. Set extraction_confidence: 1.0 if very clear, lower if uncertain
+6. RESOLVE COREFERENCES: Include pronoun and role references in mention_sentences
 
 {format_instructions}
 

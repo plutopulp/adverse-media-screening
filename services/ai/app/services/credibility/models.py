@@ -9,7 +9,7 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
-from app.models.llm_metadata import LLMMetadata
+from app.models.llm_metadata import AnalyserMetadata
 
 
 class SignalValue(str, Enum):
@@ -92,14 +92,8 @@ class CredibilityAssessment(BaseModel):
     hard_red_flags: list[str] = []  # Critical issues forcing manual review
 
 
-class CredibilityMetadata(LLMMetadata):
-    """Metadata for credibility assessment."""
-
-    pass
-
-
 class CredibilityResult(BaseModel):
     """Result of credibility assessment."""
 
     assessment: CredibilityAssessment
-    metadata: CredibilityMetadata
+    metadata: AnalyserMetadata
