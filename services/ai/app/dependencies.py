@@ -8,6 +8,7 @@ from app.services.llm_factory import create_llm, select_llm_config
 from app.services.matching.matcher import PersonMatcher
 from app.services.pipeline import ArticleExtractionPipeline
 from app.services.screening_pipeline import ScreeningPipeline
+from app.services.sentiment.analyser import SentimentAnalyser
 from app.utils.logger import get_logger
 from app.utils.scraping import ArticleScraper
 
@@ -65,12 +66,26 @@ def get_matcher(
     )
 
 
+def get_sentiment_analyser(
+    settings=Depends(get_settings), logger=Depends(get_app_logger)
+) -> SentimentAnalyser:
+    """Create SentimentAnalyser with configured LLM."""
+    provider, cfg = select_llm_config(settings)
+    llm = create_llm(provider, cfg.model, cfg.api_key, cfg.temperature)
+    return SentimentAnalyser(
+        llm=llm, provider=provider, model_name=cfg.model, logger=logger
+    )
+
+
 def get_screening_pipeline(
     scraper=Depends(get_scraper),
     extractor=Depends(get_extractor),
     matcher=Depends(get_matcher),
     analyser=Depends(get_credibility_analyser),
+    sentiment_analyser=Depends(get_sentiment_analyser),
     settings=Depends(get_settings),
 ) -> ScreeningPipeline:
     """Create ScreeningPipeline with all required services."""
-    return ScreeningPipeline(scraper, extractor, matcher, settings, analyser)
+    return ScreeningPipeline(
+        scraper, extractor, matcher, settings, analyser, sentiment_analyser
+    )

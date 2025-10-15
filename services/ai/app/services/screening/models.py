@@ -11,6 +11,7 @@ from app.models.articles import Article
 from app.services.credibility.models import CredibilityResult
 from app.services.extraction.models import Entity
 from app.services.matching.models import MatchingResult, QueryPerson
+from app.services.sentiment.models import SentimentResult
 
 
 class ScreeningResult(BaseModel):
@@ -37,8 +38,6 @@ class ScreeningResult(BaseModel):
     article: Article  # Full article at top level (url, title, content)
     article_credibility: CredibilityResult | None = None
     query_person: QueryPerson
-    entities: list[Entity]  # All extracted entities with allegations
+    entities: list[Entity]  # All extracted entities
     matching: MatchingResult  # Match decisions and signals
-
-    # Future expansion
-    # sentiment: SentimentResult | None = None
+    sentiment: SentimentResult | None = None  # Adverse media sentiment analysis

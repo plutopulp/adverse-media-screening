@@ -1,5 +1,5 @@
 # IMPORTANT: Update this version when you make changes to the prompt
-PROMPT_VERSION = "0.1.3"
+PROMPT_VERSION = "0.1.4"
 
 MATCHING_PROMPT = """You are a person matching specialist for adverse media screening in a regulated context.
 
@@ -64,9 +64,9 @@ You will evaluate TWO categories of signals: NAME and DEMOGRAPHICS.
   Example: "Rachel Reeves" + birth year 1979 matches exactly
   Confidence: 0.85-1.0
 
-- **probable_match**: Name matches + DOB compatible (within 2 years) OR exact name but no DOB
-  Example: "Rachel Reeves" exact match + birth year within 1-2 years OR exact name with no DOB data
-  Confidence: 0.65-0.84
+- **probable_match**: Name matches + DOB compatible (within 2 years) OR exact name but no DOB OR very high fuzzy similarity (≥0.95) with exact first and last name components
+  Example: "Rachel Reeves" exact match + birth year within 1-2 years OR exact name with no DOB data OR "Roman Abramovic" vs "Roman Abramovich" (single character typo with exact components)
+  Confidence: 0.70-0.84
 
 - **possible_match**: Partial name match OR fuzzy name match with no contradictions
   Example: "Reeves" matches last name of "Rachel Reeves", no birth year data to contradict
@@ -92,8 +92,8 @@ You will evaluate TWO categories of signals: NAME and DEMOGRAPHICS.
 9. For SignalValue fields, use EXACTLY: "match", "no_match", or "unknown"
 10. Confidence scoring:
     - definite_match: 0.85-1.0
-    - probable_match: 0.65-0.84
-    - possible_match: 0.40-0.64
+    - probable_match: 0.70-0.84 (elevated if fuzzy ≥0.95 with exact name components)
+    - possible_match: 0.40-0.69
     - uncertain: 0.20-0.39
     - no_match: 0.0-0.19
 

@@ -67,10 +67,12 @@ def screen_article(
 
     Performs:
     1. Article scraping
-    2. Entity extraction
-    3. Person matching
+    2. Credibility assessment
+    3. Entity extraction
+    4. Person matching
+    5. Sentiment analysis
 
-    Returns comprehensive screening results with article, entities, and match data.
+    Returns comprehensive screening results with article, entities, match data, and sentiment.
     """
     query_person = QueryPerson(name=name, date_of_birth=date_of_birth)
     return pipeline.screen(url, query_person)

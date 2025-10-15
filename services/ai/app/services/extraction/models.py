@@ -89,3 +89,12 @@ class ExtractionResult(BaseModel):
 
     entities: list[Entity]
     metadata: AnalyserMetadata
+
+    def get_entity_by_id(self, entity_id: str) -> Entity | None:
+        """
+        Look up entity by ID.
+
+        Returns:
+            Entity if found, None otherwise
+        """
+        return next((e for e in self.entities if e.id == entity_id), None)

@@ -13,6 +13,8 @@ from app.services.extraction.models import ExtractionResult
 from app.services.matching.matcher import PersonMatcher
 from app.services.matching.models import MatchingResult, QueryPerson
 from app.services.screening.models import ScreeningResult
+from app.services.sentiment.analyser import SentimentAnalyser
+from app.services.sentiment.models import SentimentResult
 from app.utils.scraping import ArticleScraper
 
 
@@ -31,6 +33,7 @@ class ScreeningPipeline:
         matcher: PersonMatcher,
         settings: Settings,
         analyser: CredibilityAnalyser | None = None,
+        sentiment_analyser: SentimentAnalyser | None = None,
     ):
         """
         Initialize screening pipeline with required services.
@@ -40,12 +43,15 @@ class ScreeningPipeline:
             extractor: LLM-based entity extractor
             matcher: LLM-based person matcher
             settings: Application settings
+            analyser: Credibility analyser (optional)
+            sentiment_analyser: Sentiment analyser (optional)
         """
         self.scraper = scraper
         self.extractor = extractor
         self.matcher = matcher
         self.settings = settings
         self.analyser = analyser
+        self.sentiment_analyser = sentiment_analyser
 
     def screen(self, url: str, query_person: QueryPerson) -> ScreeningResult:
         """
@@ -87,6 +93,14 @@ class ScreeningPipeline:
             query_person, extraction_result
         )
 
+        # Step 4: Sentiment analysis on selected targets
+        sentiment_result: SentimentResult | None = None
+        if self.sentiment_analyser is not None:
+            targets = matching_result.get_sentiment_targets()
+            sentiment_result = self.sentiment_analyser.analyse_batch(
+                targets, extraction_result, article
+            )
+
         # Build comprehensive result
         return ScreeningResult(
             article=article,
@@ -94,4 +108,5 @@ class ScreeningPipeline:
             query_person=query_person,
             entities=extraction_result.entities,
             matching=matching_result,
+            sentiment=sentiment_result,
         )

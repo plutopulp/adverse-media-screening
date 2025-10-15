@@ -288,6 +288,26 @@ class MatchingResult(BaseModel):
     summary: str
     metadata: AnalyserMetadata
 
+    def get_sentiment_targets(self) -> list[str]:
+        """
+        Get entity IDs that should undergo sentiment analysis.
+
+        Returns definite matches if any exist, otherwise probable and possible matches.
+        Skips uncertain and no_match results.
+        """
+        if self.has_definite_match:
+            return [
+                m.entity_id
+                for m in self.matches
+                if m.decision == MatchDecision.DEFINITE_MATCH
+            ]
+        return [
+            m.entity_id
+            for m in self.matches
+            if m.decision
+            in (MatchDecision.PROBABLE_MATCH, MatchDecision.POSSIBLE_MATCH)
+        ]
+
     @staticmethod
     def generate_summary(matches: list[PersonMatch], query_name: str) -> str:
         """
