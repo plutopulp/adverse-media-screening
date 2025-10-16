@@ -65,12 +65,9 @@ docker compose version  # Should show v2.x.x
    OPENAI__API_KEY=your-openai-api-key-here
    ```
 
-   Or if you are concerned with `.env.defaults` not being git-ignored, you can also create a separate `services/ai/.env` file and place it in there.
-
 1. **Build and start**:
 
    ```bash
-   make build
    make start
    ```
 
@@ -147,7 +144,7 @@ docker compose exec web sh        # Shell in web service
 
 ## ⚙️ Configuration
 
-The application loads settings from `services/ai/.env.defaults`. You can override any setting by creating `services/ai/.env` (gitignored).
+The application loads settings from `services/ai/.env.defaults`.
 
 ### Results Storage
 

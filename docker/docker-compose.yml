@@ -20,7 +20,6 @@ services:
       - ../services/ai/results:/app/results
     env_file:
       - ../services/ai/.env.defaults
-      - ../services/ai/.env # Optional overrides
     restart: unless-stopped
     stdin_open: true
     tty: true
