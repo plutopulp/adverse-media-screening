@@ -2,11 +2,13 @@
 Screening router for adverse media analysis.
 """
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
-from app.dependencies import get_screening_pipeline
+from app.dependencies import get_results_storage, get_screening_pipeline
 from app.models.forms import ScreeningFormData
 from app.services.matching.models import QueryPerson
+from app.services.results.models import ResultMetadata
+from app.services.results.storage import ResultsStorage
 from app.services.screening.models import ScreeningResult
 from app.services.screening_pipeline import ScreeningPipeline
 
@@ -39,3 +41,33 @@ def screen_article(
         name=form_data.full_name, date_of_birth=form_data.dob_string
     )
     return pipeline.screen(str(form_data.url), query_person)
+
+
+@router.get("/results", response_model=list[ResultMetadata])
+def list_results(storage: ResultsStorage = Depends(get_results_storage)):
+    """
+    List all saved screening results.
+
+    Returns results filtered by current schema version, ordered by creation date (newest first).
+    """
+    return storage.list_results()
+
+
+@router.get("/results/{result_id}", response_model=ScreeningResult)
+def get_result(result_id: str, storage: ResultsStorage = Depends(get_results_storage)):
+    """
+    Get a specific screening result by ID.
+
+    Args:
+        result_id: UUID of the result to retrieve
+
+    Returns:
+        Complete screening result with all analysis data
+
+    Raises:
+        HTTPException: 404 if result not found
+    """
+    try:
+        return storage.get_result(result_id)
+    except FileNotFoundError:
+        raise HTTPException(status_code=404, detail="Result not found")

@@ -123,7 +123,7 @@ class SentimentAnalyser:
             prompt_data = self.compose_prompt(context)
             assessment = self.invoke_model(prompt_data)
             processing_time = time.time() - start_time
-            final_assessment = self.postprocess(assessment, entity, processing_time)
+            final_assessment = self.postprocess(assessment, entity)
 
             self.logger.info(
                 "Sentiment analysed in {:.2f}s: {} allegations, risk={}",

@@ -11,6 +11,9 @@ from pathlib import Path
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 
+# Application version - increment when ScreeningResult schema changes
+APP_VERSION = "1.0.0"
+
 
 class LLMProviderType(str, Enum):
     """Supported LLM providers."""

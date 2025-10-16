@@ -4,6 +4,8 @@ Screening pipeline for adverse media analysis.
 Orchestrates the complete workflow: scrape → extract → match → (future: sentiment).
 """
 
+from logging import Logger
+
 from app.config import Settings
 from app.models.articles import Article
 from app.services.credibility.analyser import CredibilityAnalyser
@@ -12,6 +14,7 @@ from app.services.extraction.llm import EntityExtractor
 from app.services.extraction.models import ExtractionResult
 from app.services.matching.matcher import PersonMatcher
 from app.services.matching.models import MatchingResult, QueryPerson
+from app.services.results.storage import ResultsStorage
 from app.services.screening.models import ScreeningResult
 from app.services.sentiment.analyser import SentimentAnalyser
 from app.services.sentiment.models import SentimentResult
@@ -34,6 +37,7 @@ class ScreeningPipeline:
         settings: Settings,
         analyser: CredibilityAnalyser | None = None,
         sentiment_analyser: SentimentAnalyser | None = None,
+        storage: ResultsStorage | None = None,
     ):
         """
         Initialize screening pipeline with required services.
@@ -45,6 +49,7 @@ class ScreeningPipeline:
             settings: Application settings
             analyser: Credibility analyser (optional)
             sentiment_analyser: Sentiment analyser (optional)
+            storage: Results storage for auto-saving (optional)
         """
         self.scraper = scraper
         self.extractor = extractor
@@ -52,6 +57,7 @@ class ScreeningPipeline:
         self.settings = settings
         self.analyser = analyser
         self.sentiment_analyser = sentiment_analyser
+        self.storage = storage
 
     def screen(self, url: str, query_person: QueryPerson) -> ScreeningResult:
         """
@@ -102,7 +108,7 @@ class ScreeningPipeline:
             )
 
         # Build comprehensive result
-        return ScreeningResult(
+        result = ScreeningResult(
             article=article,
             article_credibility=credibility,
             query_person=query_person,
@@ -110,3 +116,11 @@ class ScreeningPipeline:
             matching=matching_result,
             sentiment=sentiment_result,
         )
+
+        # Auto-save result if storage is configured
+        if self.storage is not None:
+            result_id = self.storage.save_result(result)
+            # Logger should be available through storage, but we can't access it here
+            # The storage will handle logging
+
+        return result

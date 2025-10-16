@@ -1,0 +1,182 @@
+{
+  "article": {
+    "url": "https://www.theguardian.com/business/2024/nov/12/metro-bank-fined-potential-money-laundering-fca",
+    "title": "Metro Bank fined nearly £17m for failure to monitor potential money laundering",
+    "content": "Skip to main contentSkip to navigation\n\nSkip to navigation\n\nProblems were raised by junior staff three years before they were completely resolved, says FCA\n\nShare\n\nMetro Bank has been fined nearly £17m by the UK’s financial watchdog for failings in its money-laundering controls over four years, in a fresh blow to the lender a year on from its near-collapse.\n\nIn a surprise announcement that also triggered the early release of Metro’s third-quarter results on Tuesday morning, the Financial Conduct Authority (FCA) said it had found shortfalls in the bank’s financial crime checks between 2016 and 2020.\n\nThe FCA said that while Metro started automating the monitoring of customer transactions for potential financial crime in 2016, the system did not work as intended. It found that any transactions which took place on the day a new account was opened, or until the account record was updated, were able to pass through the system unchecked.\n\nJunior staff raised the alarm in 2017 and 2018, but Metro failed to identify and fix the problem until July 2019. Even then, the FCA said the bank did not have the systems in place to consistently check that all the data was being properly entered until December 2020.\n\nIt left a loophole in which 60m transactions, worth £51bn, were able to pass through the system without being properly reviewed for potential money laundering.\n\nThe regulator on Tuesday said it had fined Metro £16.7m over the failings, which the FCA said “risked a gap being left in our defence against the criminal misuse of our financial system. Those failings went on for too long.”\n\nMetro said it accepted the FCA’s findings and had since resolved the monitoring system failings and enhanced its processes. Metro would have been fined £23.8m but was given a 30% discount under FCA rules after agreeing to resolve the problems. The company’s shares were largely unaffected by news of the fine.\n\nIt is the latest blow to the UK challenger bank, which has been working through a painful turnaround plan involving more than 1,000 job cuts, since being forced into the arms of the Colombian billionaire Jaime Gilinski Bacal as part of a £925m rescue deal last year.\n\nThe challenger bank, which has 76 branches and 2.7 million customers, launched in the UK in 2010, when it became the first high street bank to open in more than 100 years. Co-founded by the US billionaire Vernon Hill, it initially attracted a wave of customers after launching in the UK offering seven-day opening hours and dog-friendly branches.\n\nBut a major accounting blunder in 2019, in which it miscalculated the amount of risky loans on its balance sheet, put it in breach of UK regulations, leading to a mini-bank run and resulting in Hill resigning as chair.\n\nIt also dashed hopes of more lenient capital rules that might have helped Metro compete with larger rivals, prompting panic last autumn that led to the bank being scooped up by Bacal, who now owns 53% of the lender.\n\nskip past newsletter promotion\n\nSign up to Business Today\n\nFree daily newsletter\n\nGet set for the working day – we'll point you to all the business news and analysis you need every morning\n\nPrivacy Notice: Newsletters may contain information about charities, online ads, and content funded by outside parties. If you do not have an account, we will create a guest account for you on theguardian.com to send you this newsletter. You can complete full registration at any time. For more information about how we use your data see our Privacy Policy. We use Google reCaptcha to protect our website and the Google Privacy Policy and Terms of Service apply.\n\nafter newsletter promotion\n\nUnder Bacal’s guidance, the lender has been pulling out of the traditional retail mortgage market, and pushing further into business banking and specialist mortgages involved in shared ownership, buy-to-let, and high-net-worth individuals paid in bonuses rather than salaries.\n\nIt has led to a turnaround in the bank’s fortunes, and a forecast by the bank in August predicted it would return to profitability by the end of the year. On Tuesday, the bank said it had returned to profit on an “underlying basis” in October.\n\nCommenting on the FCA fine, Daniel Frumkin, the chief executive of Metro Bank, said: “The conclusion of these inquiries draws a line under this legacy issue, allowing the bank to move forward and fully focus on the future, building on the solid foundations it has already laid.\n\n“We are continuing, at pace, our shift towards higher-yielding specialist mortgages and commercial, corporate and SME lending with a strong pipeline of business.”\n\nLast month, the FCA fined another challenger bank, Starling, £29m for “shockingly lax” financial crime controls. The online bank “left the financial system wide open to criminals and those subject to sanctions”, the FCA said.\n\nExplore more on these topics\n\nShare\n\nSign up for our email"
+  },
+  "article_credibility": {
+    "assessment": {
+      "signals": {
+        "has_attribution": "yes",
+        "has_multiple_sources": "yes",
+        "distinguishes_fact_allegation": "yes",
+        "has_named_quotes": "yes",
+        "has_balanced_coverage": "yes",
+        "is_internally_consistent": "yes",
+        "has_technical_detail": "yes",
+        "uses_hedging_language": "yes",
+        "has_sensational_language": "no",
+        "has_excessive_anonymous_sources": "no",
+        "lacks_substantiating_detail": "no",
+        "has_poor_grammar": "no",
+        "has_conspiratorial_framing": "no",
+        "has_vague_institutions": "no",
+        "has_meta_claims": "no",
+        "has_emotional_tone": "no"
+      },
+      "credibility_score": 0.95,
+      "recommendation": "reliable",
+      "rationale": "The article demonstrates high journalistic quality with clear attribution to the FCA, multiple sources, and balanced coverage including Metro Bank's response. It provides technical details and uses appropriate hedging language. There are no signs of sensationalism or conspiratorial framing.",
+      "key_strengths": [
+        "Clear attribution to the Financial Conduct Authority (FCA)",
+        "Multiple sources and perspectives, including Metro Bank's response",
+        "Technical details such as dates, amounts, and specific regulatory actions",
+        "Use of hedging language to distinguish allegations from facts"
+      ],
+      "key_weaknesses": [],
+      "hard_red_flags": []
+    },
+    "metadata": {
+      "processed_at": "2025-10-16T13:13:44.264977",
+      "processing_time_seconds": 4.74,
+      "llm_provider": "openai",
+      "llm_model": "gpt-4o",
+      "analyser_version": "0.1.0",
+      "prompt_version": "0.1.0"
+    }
+  },
+  "query_person": {
+    "name": "Roman Abrahamovich",
+    "date_of_birth": null,
+    "normalised_name": "Roman Abrahamovich",
+    "possible_nicknames": [],
+    "birth_year": null
+  },
+  "entities": [
+    {
+      "id": "d93f97d3-c4d9-4c2c-ae1d-8e0116a64b71",
+      "name": "Jaime Gilinski Bacal",
+      "aliases": [
+        "Bacal",
+        "the Colombian billionaire"
+      ],
+      "age": null,
+      "birth_year": null,
+      "date_of_birth": null,
+      "employments": [],
+      "locations": [
+        "Colombia"
+      ],
+      "nationalities": [],
+      "place_of_birth": null,
+      "identifiers": [],
+      "relationships": [],
+      "mention_sentences": [
+        "It is the latest blow to the UK challenger bank, which has been working through a painful turnaround plan involving more than 1,000 job cuts, since being forced into the arms of the Colombian billionaire Jaime Gilinski Bacal as part of a £925m rescue deal last year.",
+        "It also dashed hopes of more lenient capital rules that might have helped Metro compete with larger rivals, prompting panic last autumn that led to the bank being scooped up by Bacal, who now owns 53% of the lender.",
+        "Under Bacal’s guidance, the lender has been pulling out of the traditional retail mortgage market, and pushing further into business banking and specialist mortgages involved in shared ownership, buy-to-let, and high-net-worth individuals paid in bonuses rather than salaries."
+      ],
+      "mention_count": 3,
+      "extraction_confidence": 1.0
+    },
+    {
+      "id": "fcdd61d4-f5d8-4ea3-b70d-09a756dffa8f",
+      "name": "Vernon Hill",
+      "aliases": [
+        "Hill",
+        "the US billionaire"
+      ],
+      "age": null,
+      "birth_year": null,
+      "date_of_birth": null,
+      "employments": [
+        {
+          "role": "Co-founder",
+          "organization": "Metro Bank",
+          "location": "UK",
+          "timeframe": "former",
+          "evidence_quote": "Co-founded by the US billionaire Vernon Hill, it initially attracted a wave of customers after launching in the UK offering seven-day opening hours and dog-friendly branches."
+        },
+        {
+          "role": "Chair",
+          "organization": "Metro Bank",
+          "location": "UK",
+          "timeframe": "former",
+          "evidence_quote": "But a major accounting blunder in 2019, in which it miscalculated the amount of risky loans on its balance sheet, put it in breach of UK regulations, leading to a mini-bank run and resulting in Hill resigning as chair."
+        }
+      ],
+      "locations": [
+        "UK"
+      ],
+      "nationalities": [],
+      "place_of_birth": null,
+      "identifiers": [],
+      "relationships": [],
+      "mention_sentences": [
+        "Co-founded by the US billionaire Vernon Hill, it initially attracted a wave of customers after launching in the UK offering seven-day opening hours and dog-friendly branches.",
+        "But a major accounting blunder in 2019, in which it miscalculated the amount of risky loans on its balance sheet, put it in breach of UK regulations, leading to a mini-bank run and resulting in Hill resigning as chair."
+      ],
+      "mention_count": 2,
+      "extraction_confidence": 1.0
+    },
+    {
+      "id": "a536445d-82c0-4ea6-9025-f97d029b65b1",
+      "name": "Daniel Frumkin",
+      "aliases": [
+        "Frumkin",
+        "the chief executive of Metro Bank"
+      ],
+      "age": null,
+      "birth_year": null,
+      "date_of_birth": null,
+      "employments": [
+        {
+          "role": "Chief Executive",
+          "organization": "Metro Bank",
+          "location": null,
+          "timeframe": "current",
+          "evidence_quote": "Commenting on the FCA fine, Daniel Frumkin, the chief executive of Metro Bank, said: “The conclusion of these inquiries draws a line under this legacy issue, allowing the bank to move forward and fully focus on the future, building on the solid foundations it has already laid."
+        }
+      ],
+      "locations": [],
+      "nationalities": [],
+      "place_of_birth": null,
+      "identifiers": [],
+      "relationships": [],
+      "mention_sentences": [
+        "Commenting on the FCA fine, Daniel Frumkin, the chief executive of Metro Bank, said: “The conclusion of these inquiries draws a line under this legacy issue, allowing the bank to move forward and fully focus on the future, building on the solid foundations it has already laid."
+      ],
+      "mention_count": 1,
+      "extraction_confidence": 1.0
+    }
+  ],
+  "matching": {
+    "query_person": {
+      "name": "Roman Abrahamovich",
+      "date_of_birth": null,
+      "normalised_name": "Roman Abrahamovich",
+      "possible_nicknames": [],
+      "birth_year": null
+    },
+    "entities_analysed": [
+      "d93f97d3-c4d9-4c2c-ae1d-8e0116a64b71",
+      "fcdd61d4-f5d8-4ea3-b70d-09a756dffa8f",
+      "a536445d-82c0-4ea6-9025-f97d029b65b1"
+    ],
+    "matches": [],
+    "has_definite_match": false,
+    "has_any_match": false,
+    "requires_manual_review": false,
+    "primary_match": null,
+    "summary": "No matches found for 'Roman Abrahamovich' in this article.",
+    "metadata": {
+      "processed_at": "2025-10-16T13:14:20.569986",
+      "processing_time_seconds": 16.35,
+      "llm_provider": "openai",
+      "llm_model": "gpt-4o",
+      "analyser_version": "0.1.0",
+      "prompt_version": "0.1.4"
+    }
+  },
+  "sentiment": null
+}

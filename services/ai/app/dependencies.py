@@ -1,12 +1,13 @@
 import httpx
 from fastapi import Depends
 
-from app.config import Settings
+from app.config import APP_VERSION, Settings
 from app.services.credibility.analyser import CredibilityAnalyser
 from app.services.extraction.llm import EntityExtractor
 from app.services.llm_factory import create_llm, select_llm_config
 from app.services.matching.matcher import PersonMatcher
 from app.services.pipeline import ArticleExtractionPipeline
+from app.services.results.storage import ResultsStorage
 from app.services.screening_pipeline import ScreeningPipeline
 from app.services.sentiment.analyser import SentimentAnalyser
 from app.utils.logger import get_logger
@@ -77,15 +78,27 @@ def get_sentiment_analyser(
     )
 
 
+def get_results_storage(
+    settings: Settings = Depends(get_settings), logger=Depends(get_app_logger)
+) -> ResultsStorage:
+    """Create ResultsStorage for persisting screening results."""
+    return ResultsStorage(
+        results_dir=settings.project_root / "results",
+        schema_version=APP_VERSION,
+        logger=logger,
+    )
+
+
 def get_screening_pipeline(
     scraper=Depends(get_scraper),
     extractor=Depends(get_extractor),
     matcher=Depends(get_matcher),
     analyser=Depends(get_credibility_analyser),
     sentiment_analyser=Depends(get_sentiment_analyser),
+    storage=Depends(get_results_storage),
     settings=Depends(get_settings),
 ) -> ScreeningPipeline:
     """Create ScreeningPipeline with all required services."""
     return ScreeningPipeline(
-        scraper, extractor, matcher, settings, analyser, sentiment_analyser
+        scraper, extractor, matcher, settings, analyser, sentiment_analyser, storage
     )

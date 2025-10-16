@@ -1,3 +1,5 @@
+"use client";
+
 import { Stack, Button, Group, Modal, Code } from "@mantine/core";
 import type { ScreeningResult } from "~/types/screening";
 import { useScreeningResult } from "../hooks/useScreeningResult";
@@ -7,12 +9,10 @@ import { SentimentCard } from "./results/SentimentCard";
 
 interface ScreeningResultDisplayProps {
   result: ScreeningResult;
-  onNewSearch: () => void;
 }
 
 export function ScreeningResultDisplay({
   result,
-  onNewSearch,
 }: ScreeningResultDisplayProps) {
   const {
     showRawJson,
@@ -27,14 +27,9 @@ export function ScreeningResultDisplay({
     <>
       <Stack gap="lg">
         <Group justify="space-between">
-          <Group gap="sm">
-            <Button onClick={onNewSearch} variant="default">
-              New Search
-            </Button>
-            <Button onClick={() => setShowRawJson(true)} variant="subtle">
-              View Raw JSON
-            </Button>
-          </Group>
+          <Button onClick={() => setShowRawJson(true)} variant="subtle">
+            View Raw JSON
+          </Button>
           <Group gap="sm">
             <Button onClick={expandAll} size="compact-sm" variant="subtle">
               Expand All

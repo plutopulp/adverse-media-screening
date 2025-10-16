@@ -8,6 +8,7 @@ services:
     volumes:
       - ../services/ai/app:/app/app # Mount source code for development
       - ../services/ai/downloads:/app/downloads
+      - ../services/ai/results:/app/results
     env_file:
       - ../services/ai/.env
     environment:

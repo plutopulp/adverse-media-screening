@@ -2,6 +2,7 @@ import { type Metadata } from "next";
 import "@mantine/core/styles.css";
 import { TRPCReactProvider } from "~/trpc/react";
 import { MantineProvider } from "@mantine/core";
+import { Navbar } from "./components/shared/Navbar";
 
 export const metadata: Metadata = {
   title: "Screening Task",
@@ -15,7 +16,10 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <MantineProvider>
-          <TRPCReactProvider>{children}</TRPCReactProvider>
+          <TRPCReactProvider>
+            <Navbar />
+            {children}
+          </TRPCReactProvider>
         </MantineProvider>
       </body>
     </html>

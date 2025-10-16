@@ -14,7 +14,6 @@ export interface ScreeningFormData {
 interface ScreeningFormProps {
   onSubmit: (data: ScreeningFormData) => void;
   isLoading: boolean;
-  useMockData: boolean;
 }
 
 // Config: Month options for date picker
@@ -44,11 +43,7 @@ const NAME_FIELDS = [
   { name: "lastName" as const, placeholder: "Last name", required: true },
 ];
 
-export function ScreeningForm({
-  onSubmit,
-  isLoading,
-  useMockData,
-}: ScreeningFormProps) {
+export function ScreeningForm({ onSubmit, isLoading }: ScreeningFormProps) {
   const {
     register,
     handleSubmit,
@@ -112,6 +107,7 @@ export function ScreeningForm({
               {...register("birthDay", { valueAsNumber: true })}
               placeholder="Day"
               type="number"
+              // todo: make this dynamic based on the month and year (leap year)
               min={1}
               max={31}
             />
@@ -119,6 +115,7 @@ export function ScreeningForm({
               {...register("birthYear", { valueAsNumber: true })}
               placeholder="Year"
               type="number"
+              // consider dropping the min and max
               min={1900}
               max={2030}
             />
@@ -126,13 +123,8 @@ export function ScreeningForm({
         </div>
 
         <Button type="submit" loading={isLoading} fullWidth size="md">
-          {useMockData ? "Load Mock Result" : "Screen Article"}
+          Screen Article
         </Button>
-        {useMockData && (
-          <Text size="xs" c="dimmed" ta="center">
-            Dev mode: Will load pre-generated result (fast, no LLM cost)
-          </Text>
-        )}
       </Stack>
     </form>
   );
