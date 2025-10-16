@@ -1,3 +1,12 @@
+# Adverse Media Screening Application
+#
+# Usage:
+#   Production mode: docker compose up ai web
+#   Development mode: docker compose up ai web-dev
+#
+# The AI service loads configuration from .env.defaults first, then .env overrides.
+# Only API keys need to be set in .env - other settings use sensible defaults.
+
 services:
   ai:
     build:
@@ -10,15 +19,9 @@ services:
       - ../services/ai/downloads:/app/downloads
       - ../services/ai/results:/app/results
     env_file:
-      - ../services/ai/.env
-    environment:
-      - ENVIRONMENT=development
-      - PROJECT_ROOT=/app
-      - OUTPUT_DIR=downloads
-      - LOG_LEVEL=INFO
-      - DEFAULT_LLM_PROVIDER=openai
+      - ../services/ai/.env.defaults
+      - ../services/ai/.env # Optional overrides
     restart: unless-stopped
-    # Enable interactive mode for development
     stdin_open: true
     tty: true
     healthcheck:
@@ -32,13 +35,28 @@ services:
     build:
       context: ..
       dockerfile: docker/web.Dockerfile
+      target: runner
+    ports:
+      - "3000:3000"
+    env_file:
+      - ../services/web/.env.defaults
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - ai
+
+  web-dev:
+    build:
+      context: ..
+      dockerfile: docker/web.Dockerfile
       target: dev
     ports:
       - "3000:3000"
+    env_file:
+      - ../services/web/.env.defaults
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=1
-      - AI_SERVICE_URL=http://ai:5001
     volumes:
       - ../services/web:/app
       - /app/node_modules

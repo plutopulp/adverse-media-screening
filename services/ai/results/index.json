@@ -27,6 +27,15 @@
       "article_title": "Metro Bank fined nearly £17m for failure to monitor potential money laundering",
       "created_at": "2025-10-16T13:14:20.575187+00:00",
       "schema_version": "1.0.0"
+    },
+    {
+      "id": "2f189087-200f-4d9e-b602-cfecce749b97",
+      "display_name": "Hasan Mutul - Turkish mayor detained in corruption probe as o...",
+      "person_name": "Hasan Mutul",
+      "article_url": "https://www.theguardian.com/world/2025/sep/13/turkish-mayor-hasan-mutlu-detained-corruption-probe-opposition-crackdown?utm_source=chatgpt.com",
+      "article_title": "Turkish mayor detained in corruption probe as opposition faces crackdown",
+      "created_at": "2025-10-16T16:22:42.891080+00:00",
+      "schema_version": "1.0.0"
     }
   ]
 }

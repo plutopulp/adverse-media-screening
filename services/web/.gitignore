@@ -44,3 +44,5 @@ yarn-error.log*
 
 # idea files
 .idea
+# Track .env.defaults (contains default configuration, no secrets)
+!.env.defaults

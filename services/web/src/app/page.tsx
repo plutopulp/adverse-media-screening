@@ -15,7 +15,6 @@ export default function Home() {
 
   const checkWebsite = api.screening.checkWebsite.useMutation({
     onSuccess: (data) => {
-      console.log(data);
       setResult(data);
     },
   });

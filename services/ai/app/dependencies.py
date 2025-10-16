@@ -82,11 +82,16 @@ def get_results_storage(
     settings: Settings = Depends(get_settings), logger=Depends(get_app_logger)
 ) -> ResultsStorage:
     """Create ResultsStorage for persisting screening results."""
-    return ResultsStorage(
+    storage = ResultsStorage(
         results_dir=settings.project_root / "results",
         schema_version=APP_VERSION,
         logger=logger,
     )
+
+    # Load example results if no results exist yet
+    storage.load_examples(settings.project_root / settings.output_dir)
+
+    return storage
 
 
 def get_screening_pipeline(
