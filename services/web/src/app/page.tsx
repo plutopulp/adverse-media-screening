@@ -1,16 +1,52 @@
 "use client";
 
-import { Button, Stack, TextInput, Title } from "@mantine/core";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Stack, Title, Group, Switch } from "@mantine/core";
+import { useState, useEffect, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { api } from "~/trpc/react";
+import type { ScreeningResult } from "~/types/screening";
+import { ScreeningResultDisplay } from "./components/ScreeningResultDisplay";
+import {
+  ScreeningForm,
+  type ScreeningFormData,
+} from "./components/ScreeningForm";
 
-export default function Home() {
-  const [result, setResult] = useState<{
-    match: boolean;
-    sentiment: string;
-  } | null>(null);
-  const form = useForm<{ url: string; name: string; dateOfBirth: string }>();
+// Hook: Manage mock mode state synced with URL query param
+function useMockMode() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [useMockData, setUseMockData] = useState(false);
+
+  // Initialize from URL param
+  useEffect(() => {
+    const mockParam = searchParams.get("mock");
+    if (mockParam === "true") {
+      setUseMockData(true);
+    }
+  }, [searchParams]);
+
+  // Toggle mock mode and update URL
+  const toggleMockMode = useCallback(
+    (checked: boolean) => {
+      setUseMockData(checked);
+      const url = new URL(window.location.href);
+      if (checked) {
+        url.searchParams.set("mock", "true");
+      } else {
+        url.searchParams.delete("mock");
+      }
+      router.replace(url.pathname + url.search);
+    },
+    [router],
+  );
+
+  return { useMockData, toggleMockMode };
+}
+
+// Hook: Manage screening data fetching and results
+function useScreening(useMockData: boolean) {
+  const [result, setResult] = useState<ScreeningResult | null>(null);
+
   const checkWebsite = api.screening.checkWebsite.useMutation({
     onSuccess: (data) => {
       console.log(data);
@@ -18,43 +54,77 @@ export default function Home() {
     },
   });
 
+  // Load mock data from test endpoint
+  const loadMockData = useCallback(async () => {
+    try {
+      const mockUrl = `http://localhost:5001/test/mock-result?example=roman-typo-2`;
+      const response = await fetch(mockUrl);
+      const data = (await response.json()) as ScreeningResult;
+      setResult(data);
+    } catch (error) {
+      console.error("Failed to load mock data:", error);
+    }
+  }, []);
+
+  // Submit form (either mock or real screening)
+  const handleSubmit = useCallback(
+    (formData: ScreeningFormData) => {
+      if (useMockData) {
+        void loadMockData();
+      } else {
+        checkWebsite.mutate({
+          ...formData,
+          birthDay: formData.birthDay ? Number(formData.birthDay) : undefined,
+          birthMonth: formData.birthMonth
+            ? Number(formData.birthMonth)
+            : undefined,
+          birthYear: formData.birthYear
+            ? Number(formData.birthYear)
+            : undefined,
+        });
+      }
+    },
+    [useMockData, loadMockData, checkWebsite],
+  );
+
+  // Reset to new search
+  const resetResult = useCallback(() => {
+    setResult(null);
+  }, []);
+
+  return {
+    result,
+    isLoading: checkWebsite.isPending,
+    handleSubmit,
+    resetResult,
+  };
+}
+
+export default function Home() {
+  const { useMockData, toggleMockMode } = useMockMode();
+  const { result, isLoading, handleSubmit, resetResult } =
+    useScreening(useMockData);
+
   return (
-    <Stack p="xl" maw={500} mx="auto">
-      <Title order={1}>Screening tool</Title>
+    <Stack p="xl" maw={result ? 1200 : 600} mx="auto">
+      <Group justify="space-between" align="center">
+        <Title order={1}>Adverse Media Screening Tool</Title>
+        {!result && (
+          <Switch
+            label="Use Mock Data (Dev Mode)"
+            checked={useMockData}
+            onChange={(event) => toggleMockMode(event.currentTarget.checked)}
+          />
+        )}
+      </Group>
       {result ? (
-        <Stack>
-          <pre>{JSON.stringify(result, null, 2)}</pre>
-          <Button onClick={() => setResult(null)}>Back</Button>
-        </Stack>
+        <ScreeningResultDisplay result={result} onNewSearch={resetResult} />
       ) : (
-        <form
-          onSubmit={form.handleSubmit((v) => {
-            checkWebsite.mutate(v);
-          })}
-        >
-          <Stack gap="xs">
-            <TextInput
-              {...form.register("url")}
-              label="URL"
-              placeholder="https://example.com"
-              required
-            />
-            <TextInput
-              {...form.register("name")}
-              label="Full name"
-              placeholder="John Doe"
-              required
-            />
-            <TextInput
-              type="date"
-              {...form.register("dateOfBirth")}
-              label="Date of birth"
-            />
-            <Button type="submit" loading={checkWebsite.isPending}>
-              Submit
-            </Button>
-          </Stack>
-        </form>
+        <ScreeningForm
+          onSubmit={handleSubmit}
+          isLoading={isLoading}
+          useMockData={useMockData}
+        />
       )}
     </Stack>
   );
