@@ -59,7 +59,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
 
     model_config = {
-        "env_file": ".env.defaults",
+        "env_file": [".env.defaults", ".env.secrets"],
         "env_file_encoding": "utf-8",
         "env_nested_delimiter": "__",  # Enable nested env var parsing
         "extra": "ignore",  # Ignore extra fields in env files

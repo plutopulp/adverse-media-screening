@@ -4,8 +4,10 @@
 #   Production mode: docker compose up ai web
 #   Development mode: docker compose up ai web-dev
 #
-# The AI service loads configuration from .env.defaults first, then .env overrides.
-# Only API keys need to be set in .env - other settings use sensible defaults.
+# Configuration:
+#   - .env.defaults (committed): Contains all configuration with placeholder API keys
+#   - .env.secrets (gitignored): Contains your real API keys (overrides placeholders)
+#   Run 'make setup' to create .env.secrets templates
 
 services:
   ai:
@@ -20,6 +22,7 @@ services:
       - ../services/ai/results:/app/results
     env_file:
       - ../services/ai/.env.defaults
+      - ../services/ai/.env.secrets
     restart: unless-stopped
     stdin_open: true
     tty: true
@@ -39,6 +42,7 @@ services:
       - "3000:3000"
     env_file:
       - ../services/web/.env.defaults
+      - ../services/web/.env.secrets
     environment:
       - NODE_ENV=production
     depends_on:
@@ -53,6 +57,7 @@ services:
       - "3000:3000"
     env_file:
       - ../services/web/.env.defaults
+      - ../services/web/.env.secrets
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=1

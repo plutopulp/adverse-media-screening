@@ -60,14 +60,35 @@ docker compose version  # Should show v2.x.x
 
 ## 🚀 Setup
 
-1. **Add your API key** to `services/ai/.env.defaults`:
+1. **Run the setup script**:
 
    ```bash
-   # Open services/ai/.env.defaults and replace:
-   OPENAI__API_KEY=your-openai-api-key-here
+   make setup
    ```
 
-1. **Build and start**:
+   Or without Make:
+
+   ```bash
+   bash scripts/setup.sh
+   ```
+
+   This will:
+
+   - Check that Docker and Docker Compose v2 are installed and running
+   - Create `.env.secrets` template files for you to add real API keys
+
+2. **Add your real OpenAI API key** to `services/ai/.env.secrets`:
+
+   The `.env.defaults` file contains placeholder API keys. You need to override them with your real key:
+
+   ```bash
+   # Open services/ai/.env.secrets and add your real key:
+   OPENAI__API_KEY=sk-your-actual-openai-api-key-here
+   ```
+
+   **Note**: The placeholder keys in `.env.defaults` won't work - you must add your real API key to `.env.secrets`.
+
+3. **Build and start**:
 
    ```bash
    make start
@@ -146,7 +167,32 @@ docker compose exec web sh        # Shell in web service
 
 ## ⚙️ Configuration
 
-The application loads settings from `services/ai/.env.defaults`.
+The application uses a two-file environment configuration system:
+
+- **`.env.defaults`** (committed to git): Contains all configuration with sensible defaults and placeholder API keys
+- **`.env.secrets`** (gitignored): Contains your real API keys and any overrides
+
+This separation keeps secrets out of version control while making configuration transparent.
+
+### Configuration Files
+
+**AI Service** (`services/ai/`):
+
+- `.env.defaults` - Default LLM models, temperature, log level, and **placeholder API keys**
+- `.env.secrets` - Your **real** OpenAI and Anthropic API keys (override placeholders here)
+
+**Web Service** (`services/web/`):
+
+- `.env.defaults` - AI service URL and Node environment
+- `.env.secrets` - Any environment-specific overrides (optional)
+
+### How It Works
+
+Both `config.py` (Python) and `docker-compose.yml` load `.env.defaults` first, then `.env.secrets`. Any values in `.env.secrets` override those in `.env.defaults`. This means:
+
+1. The placeholder keys in `.env.defaults` are **not functional** - they're just examples
+2. You **must** add your real API keys to `.env.secrets` to use the application
+3. You can override any other setting (model, log level, etc.) in `.env.secrets` without modifying the committed defaults
 
 ### Results Storage
 
@@ -272,7 +318,7 @@ make logs
 
 **"Invalid API key":**
 
-- Verify your API key in `services/ai/.env`
+- Verify your API key in `services/ai/.env.secrets`
 - Check you're using the correct provider (OpenAI vs Anthropic)
 
 **"Rate limit exceeded":**
@@ -282,7 +328,7 @@ make logs
 
 **"Model not found":**
 
-- Verify the model name in `.env` matches your provider
+- Verify the model name in `.env.defaults` (or override in `.env.secrets`) matches your provider
 - Check your API account has access to the model
 
 ### Results Not Persisting
@@ -328,6 +374,6 @@ npm install
 ### Still Having Issues?
 
 1. Check the logs: `make logs`
-2. Verify environment variables: `cat services/ai/.env`
+2. Verify environment variables: `cat services/ai/.env.defaults services/ai/.env.secrets`
 3. Restart services: `make restart`
 4. Rebuild from scratch: `make clean && make build && make start`

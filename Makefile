@@ -4,10 +4,13 @@ POETRY := poetry -C services/ai
 DC_FILEPATH := docker/docker-compose.yml
 DC := docker compose -f $(DC_FILEPATH)
 
-.PHONY: help build rebuild start stop restart ps logs shell-web shell-ai clean format lint test dev-start dev-stop dev-logs
+.PHONY: help setup build rebuild start stop restart ps logs shell-web shell-ai clean format lint test dev-start dev-stop dev-logs
 
 help:
 	@echo "Adverse Media Screening App commands"
+	@echo ""
+	@echo "Setup:"
+	@echo "  make setup      Run initial setup (check dependencies, create env files)"
 	@echo ""
 	@echo "Docker (Production):"
 	@echo "  make build      Build all services"
@@ -29,6 +32,10 @@ help:
 	@echo "  make format     Format code with black and isort"
 	@echo "  make lint       Lint code with flake8"
 	@echo "  make test       Run tests"
+
+# Setup
+setup:
+	@bash scripts/setup.sh
 
 # Docker operations
 build:
