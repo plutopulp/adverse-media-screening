@@ -2,6 +2,8 @@
 
 An AI-powered tool for compliance analysts to screen individuals against news articles for adverse media mentions. The system uses large language models to assess an article's credibility, extract all person entities and person-person relationships, match the analyst person query to article person entities and assess whether the coverage is adverse.
 
+> **Project Context**: This was developed as a technical assessment for a compliance software role. The repository started from a Next.js + tRPC template provided by the hiring team (commit `d970003`). All subsequent development is original work.
+
 ## ✨ Features
 
 - **Credibility Assessment**: Evaluates article reliability before performing expensive analysis
