@@ -105,23 +105,24 @@ EOF
     echo -e "${GREEN}✓${NC}  Created $AI_SECRETS_FILE"
 fi
 
-# Create Web service .env.secrets
-WEB_SECRETS_FILE="$PROJECT_ROOT/services/web/.env.secrets"
-if [ -f "$WEB_SECRETS_FILE" ]; then
-    echo -e "${YELLOW}⚠${NC}  $WEB_SECRETS_FILE already exists, skipping..."
+# Create Web service .env.local (Next.js convention)
+WEB_LOCAL_FILE="$PROJECT_ROOT/services/web/.env.local"
+if [ -f "$WEB_LOCAL_FILE" ]; then
+    echo -e "${YELLOW}⚠${NC}  $WEB_LOCAL_FILE already exists, skipping..."
 else
-    cat > "$WEB_SECRETS_FILE" << 'EOF'
+    cat > "$WEB_LOCAL_FILE" << 'EOF'
 # =============================================================================
-# SECRETS FILE - DO NOT COMMIT TO GIT
+# LOCAL ENVIRONMENT - DO NOT COMMIT TO GIT
 # =============================================================================
-# This file contains sensitive configuration that overrides .env.defaults.
+# This file overrides values from .env (Next.js convention)
+# It is automatically loaded by Next.js and takes precedence over .env
 
-# Currently no secrets are required for the web service.
-# Add any environment-specific overrides here if needed.
+# Currently no local overrides are needed for development.
+# Add environment-specific overrides here if needed.
 # Examples:
-# AI_SERVICE_URL=http://localhost:5001  (for local development)
+# AI_SERVICE_URL=http://localhost:5001  (if running services outside Docker)
 EOF
-    echo -e "${GREEN}✓${NC}  Created $WEB_SECRETS_FILE"
+    echo -e "${GREEN}✓${NC}  Created $WEB_LOCAL_FILE"
 fi
 
 echo ""

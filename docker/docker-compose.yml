@@ -40,8 +40,8 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - ../services/web/.env.defaults
-      - ../services/web/.env.secrets
+      - ../services/web/.env
+      - ../services/web/.env.local
     environment:
       - NODE_ENV=production
     depends_on:
@@ -55,8 +55,8 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - ../services/web/.env.defaults
-      - ../services/web/.env.secrets
+      - ../services/web/.env
+      - ../services/web/.env.local
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=1
