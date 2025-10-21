@@ -55,7 +55,6 @@ class Settings(BaseSettings):
     default_llm_provider: LLMProviderType = LLMProviderType.OPENAI
 
     # Processing
-    output_dir: Path = Path("downloads")
     log_level: str = "INFO"
 
     model_config = {

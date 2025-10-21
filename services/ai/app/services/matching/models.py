@@ -345,6 +345,7 @@ class MatchingResult(BaseModel):
         top_match = matches[0]
         return (
             f"Found {len(matches)} potential matches for '{query_name}'. "
-            f"Top match: '{top_match.entity_name}' ({top_match.decision.value}, {top_match.confidence:.0%}). "
-            f"Manual review recommended for disambiguation."
+            "Top match: "
+            f"'{top_match.entity_name}' ({top_match.decision.value}, "
+            f"{top_match.confidence:.0%}) - Manual review recommended for disambiguation."
         )

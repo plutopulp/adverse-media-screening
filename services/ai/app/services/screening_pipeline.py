@@ -4,8 +4,6 @@ Screening pipeline for adverse media analysis.
 Orchestrates the complete workflow: scrape → extract → match → (future: sentiment).
 """
 
-from logging import Logger
-
 from app.config import Settings
 from app.models.articles import Article
 from app.services.credibility.analyser import CredibilityAnalyser
@@ -119,7 +117,7 @@ class ScreeningPipeline:
 
         # Auto-save result if storage is configured
         if self.storage is not None:
-            result_id = self.storage.save_result(result)
+            _ = self.storage.save_result(result)
             # Logger should be available through storage, but we can't access it here
             # The storage will handle logging
 

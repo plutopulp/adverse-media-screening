@@ -19,7 +19,7 @@ RUN poetry config virtualenvs.create false
 
 RUN poetry install --no-interaction --no-ansi --no-root
 
-RUN mkdir -p /app/app /app/downloads && chown -R 1000:1000 /app
+RUN mkdir -p /app/app /app/results && chown -R 1000:1000 /app
 # Copy application code
 COPY services/ai/app /app/app
     

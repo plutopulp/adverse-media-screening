@@ -48,7 +48,8 @@ def list_results(storage: ResultsStorage = Depends(get_results_storage)):
     """
     List all saved screening results.
 
-    Returns results filtered by current schema version, ordered by creation date (newest first).
+    Returns results filtered by current schema version,
+    ordered by creation date (newest first).
     """
     return storage.list_results()
 

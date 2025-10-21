@@ -127,15 +127,6 @@ That's it! Access at:
 2. Browse all past screenings
 3. Click any result card to see full details
 
-### Example Test Cases
-
-The application includes example screening results (loaded automatically on first run):
-
-- **Roman Abramovich** - Adverse media (sanctions, oligarch connections)
-- **Turkish Mayor** - Corruption allegations
-- **Rachel Reeves** - Policy criticism (NOT adverse media)
-- **No Match Examples** - Articles without the query person
-
 ## 🐳 Docker Commands
 
 ### Using Make
@@ -196,7 +187,7 @@ Both `config.py` (Python) and `docker-compose.yml` load `.env.defaults` first, t
 
 ### Results Storage
 
-Results are automatically saved to `services/ai/results/`. Example results are loaded on first run to provide test data for reviewers.
+Screening results are automatically saved to `services/ai/results/`. This directory is gitignored and created automatically by Docker on first run. You'll start with an empty results list and build your screening history as you use the tool.
 
 ### Development vs Production
 
@@ -230,8 +221,7 @@ make dev-start
 │   │   │   ├── routes/        # API endpoints
 │   │   │   ├── services/      # Core pipeline stages
 │   │   │   └── utils/         # Utilities
-│   │   ├── downloads/         # Example articles
-│   │   ├── results/           # Saved screening results
+│   │   ├── results/           # Saved screening results (gitignored)
 │   │   ├── .env.defaults      # Default configuration
 │   │   └── pyproject.toml     # Python dependencies
 │   └── web/                   # Next.js frontend

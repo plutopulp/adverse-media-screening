@@ -157,12 +157,3 @@ class ResultsStorage:
     def _save_index(self, index: ResultIndex) -> None:
         """Save the index file."""
         self.index_file.write_text(index.model_dump_json(indent=2))
-
-    def load_examples(self, examples_dir: Path) -> None:
-        """Load example results from downloads directory if no results exist."""
-        if len(self.list_results()) > 0:
-            return
-
-        for json_file in examples_dir.glob("*.json"):
-            result = ScreeningResult.model_validate_json(json_file.read_text())
-            self.save_result(result)
