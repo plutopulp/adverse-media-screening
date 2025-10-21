@@ -1,37 +1,91 @@
+# Adverse Media Screening - Makefile
+# Usage: make <command> [SERVICE=ai|web|all] [ENV=prod|dev]
+
+# Configuration
 CODE_PATHS := app tests
 POETRY := poetry -C services/ai
-
 DC_FILEPATH := docker/docker-compose.yml
 DC := docker compose -f $(DC_FILEPATH)
 
-.PHONY: help setup build rebuild start stop restart ps logs shell-web shell-ai clean format lint test dev-start dev-stop dev-logs
+# Variables for flexible targeting
+SERVICE ?= all
+ENV ?= prod
+
+# Helper variables for service selection
+ifeq ($(SERVICE),all)
+	DC_SERVICES = ai web
+	DC_BUILD_SERVICES = ai web
+else
+	DC_SERVICES = $(SERVICE)
+	DC_BUILD_SERVICES = $(SERVICE)
+endif
+
+# Helper variables for environment selection
+ifeq ($(ENV),dev)
+	WEB_SERVICE = web-dev
+else
+	WEB_SERVICE = web
+endif
+
+# Services to use based on environment
+ifeq ($(SERVICE),all)
+	DC_ENV_SERVICES = ai $(WEB_SERVICE)
+else ifeq ($(SERVICE),web)
+	DC_ENV_SERVICES = $(WEB_SERVICE)
+else
+	DC_ENV_SERVICES = $(SERVICE)
+endif
+
+# Log services (for logs command)
+ifeq ($(SERVICE),all)
+	LOG_SERVICES = ai web
+else ifeq ($(SERVICE),web)
+	ifeq ($(ENV),dev)
+		LOG_SERVICES = web-dev
+	else
+		LOG_SERVICES = web
+	endif
+else
+	LOG_SERVICES = $(SERVICE)
+endif
+
+.PHONY: help setup build rebuild start stop restart ps logs shell clean format lint test
+
+# Default target
+.DEFAULT_GOAL := help
 
 help:
-	@echo "Adverse Media Screening App commands"
+	@echo "Adverse Media Screening - Make Commands"
+	@echo ""
+	@echo "Usage: make <command> [SERVICE=ai|web|all] [ENV=prod|dev]"
 	@echo ""
 	@echo "Setup:"
-	@echo "  make setup      Run initial setup (check dependencies, create env files)"
+	@echo "  make setup                    Run initial setup (check dependencies, create env files)"
 	@echo ""
-	@echo "Docker (Production):"
-	@echo "  make build      Build all services"
-	@echo "  make rebuild    Rebuild without cache"
-	@echo "  make start      Start all services (detached)"
-	@echo "  make stop       Stop all services"
-	@echo "  make restart    Restart all services"
-	@echo "  make ps         Show service status"
-	@echo "  make logs       Show logs for all services"
-	@echo "  make shell-web  Open shell in web service"
-	@echo "  make shell-ai   Open shell in ai service"
+	@echo "Docker Operations:"
+	@echo "  make build [SERVICE=all]      Build services"
+	@echo "  make rebuild [SERVICE=all]    Rebuild services without cache"
+	@echo "  make start [ENV=prod] [...]   Start services (detached mode)"
+	@echo "  make stop [SERVICE=all]       Stop services"
+	@echo "  make restart [SERVICE=all]    Restart services"
+	@echo "  make ps                       Show service status"
+	@echo "  make logs [SERVICE=all] [ENV] Show logs (follow mode)"
+	@echo "  make shell SERVICE=<svc>      Open shell in service (SERVICE required)"
 	@echo ""
-	@echo "Docker (Development with hot reload):"
-	@echo "  make dev-start  Start services in dev mode"
-	@echo "  make dev-stop   Stop dev services"
-	@echo "  make dev-logs   Show dev logs"
+	@echo "Maintenance:"
+	@echo "  make clean                    Stop and remove all containers, images, and volumes"
 	@echo ""
-	@echo "Python (services/ai):"
-	@echo "  make format     Format code with black and isort"
-	@echo "  make lint       Lint code with flake8"
-	@echo "  make test       Run tests"
+	@echo "Python (AI service):"
+	@echo "  make format                   Format code with black and isort"
+	@echo "  make lint                     Lint code with flake8"
+	@echo "  make test                     Run tests with pytest"
+	@echo ""
+	@echo "Examples:"
+	@echo "  make build SERVICE=ai         Build AI service only"
+	@echo "  make start ENV=dev            Start all services in development mode"
+	@echo "  make start ENV=dev SERVICE=web  Start only web in dev mode"
+	@echo "  make logs SERVICE=ai          Show AI service logs only"
+	@echo "  make shell SERVICE=web        Open shell in web container"
 
 # Setup
 setup:
@@ -39,63 +93,38 @@ setup:
 
 # Docker operations
 build:
-	$(DC) build
-
-build-ai:
-	$(DC) build ai
-
-build-web:
-	$(DC) build web
+	$(DC) build $(DC_BUILD_SERVICES)
 
 rebuild:
-	$(DC) build --no-cache
-
-rebuild-ai:
-	$(DC) build --no-cache ai
-
-rebuild-web:
-	$(DC) build --no-cache web
+	$(DC) build --no-cache $(DC_BUILD_SERVICES)
 
 start:
-	$(DC) up -d ai web
-
-start-ai:
-	$(DC) up -d ai
+	$(DC) up -d $(DC_ENV_SERVICES)
 
 stop:
-	$(DC) down
+	$(DC) stop $(DC_SERVICES)
 
 restart:
-	$(DC) restart
+	$(DC) restart $(DC_SERVICES)
 
 ps:
 	$(DC) ps
 
 logs:
-	$(DC) logs -f ai web
+	$(DC) logs -f $(LOG_SERVICES)
 
-shell-web:
-	$(DC) exec web sh
+shell:
+ifeq ($(SERVICE),all)
+	$(error SERVICE is required. Usage: make shell SERVICE=ai|web)
+endif
+	$(DC) exec $(SERVICE) sh
 
-shell-ai:
-	$(DC) exec ai sh
-
-clean:       
+clean:
 	$(DC) down --rmi local -v
-	find . -type d -name "__pycache__" -exec rm -rf {} +
-	find . -type f -name "*.pyc" -delete
+	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
+	find . -type f -name "*.pyc" -delete 2>/dev/null || true
 
-# Development mode with hot reload
-dev-start:
-	$(DC) up -d ai web-dev
-
-dev-stop:
-	$(DC) stop web-dev
-	$(DC) rm -f web-dev
-
-dev-logs:
-	$(DC) logs -f ai web-dev
-
+# Python operations (AI service)
 format:
 	@echo "Formatting code..."
 	$(POETRY) run black $(CODE_PATHS)

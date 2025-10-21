@@ -131,16 +131,33 @@ That's it! Access at:
 
 ### Using Make
 
+The Makefile supports flexible targeting with `SERVICE` and `ENV` variables:
+
 ```bash
-make build      # Build all services
-make start      # Start services (detached mode)
-make stop       # Stop all services
-make restart    # Restart services
-make logs       # View logs (follow mode)
-make ps         # Show service status
-make shell-ai   # Open shell in AI service
-make shell-web  # Open shell in web service
+# Build services
+make build                    # Build all services
+make build SERVICE=ai         # Build AI service only
+make build SERVICE=web        # Build web service only
+
+# Start services
+make start                    # Start all services in production mode
+make start ENV=dev            # Start all services in development mode
+make start SERVICE=ai         # Start AI service only
+make start ENV=dev SERVICE=web  # Start web in development mode
+
+# Other commands
+make stop [SERVICE=all]       # Stop services
+make restart [SERVICE=all]    # Restart services
+make logs [SERVICE=all]       # View logs (follow mode)
+make ps                       # Show service status
+make shell SERVICE=ai         # Open shell in AI service
+make shell SERVICE=web        # Open shell in web service
 ```
+
+**Variables:**
+
+- `SERVICE=ai|web|all` - Target specific service (default: all)
+- `ENV=prod|dev` - Target environment (default: prod)
 
 ### Using Docker Compose Directly
 
@@ -191,7 +208,7 @@ Screening results are automatically saved to `services/ai/results/`. This direct
 
 ### Development vs Production
 
-**Production Mode** (default - faster UX):
+**Production Mode** (default - faster UX, optimized builds):
 
 ```bash
 make start
@@ -201,7 +218,7 @@ make start
 **Development Mode** (hot reload for code changes):
 
 ```bash
-make dev-start
+make start ENV=dev
 # or: docker compose up ai web-dev
 ```
 
@@ -263,16 +280,22 @@ make test       # Run tests (pytest)
 # All services
 make logs
 
+# Specific service only
+make logs SERVICE=ai
+make logs SERVICE=web
+
+# Development mode logs
+make logs ENV=dev
 ```
 
 ### Rebuilding After Changes
 
 ```bash
 # Rebuild specific service
-make rebuild-ai
-make rebuild-web
+make rebuild SERVICE=ai
+make rebuild SERVICE=web
 
-# Rebuild all
+# Rebuild all services
 make rebuild
 ```
 
@@ -363,7 +386,8 @@ npm install
 
 ### Still Having Issues?
 
-1. Check the logs: `make logs`
+1. Check the logs: `make logs` or `make logs SERVICE=ai`
 2. Verify environment variables: `cat services/ai/.env.defaults services/ai/.env.secrets`
 3. Restart services: `make restart`
 4. Rebuild from scratch: `make clean && make build && make start`
+5. Check specific service: `make logs SERVICE=web` or `make shell SERVICE=ai`
