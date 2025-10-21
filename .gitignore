@@ -1,3 +1,2 @@
-# Environment secrets
-**/.env.secrets
-.env.secrets
+# Service-level .gitignore files handle their own patterns
+# See services/ai/.gitignore and services/web/.gitignore

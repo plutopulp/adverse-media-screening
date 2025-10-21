@@ -175,5 +175,8 @@ cython_debug/
 # Track .env.defaults (contains default configuration, no secrets)
 !.env.defaults
 
+# Secrets file (gitignored)
+.env.secrets
+
 # Generated data directory
 results/
